@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import os, json
 
-def scrape_remoteok_jobs(limit=10):
+def scrape_remoteok_jobs(limit=20):
     url = "https://remoteok.com/remote-data-jobs"
     headers = {"User-Agent": "Mozilla/5.0"}
     response = requests.get(url, headers=headers)
@@ -80,8 +80,27 @@ def push_to_sheet(jobs):
     print(f"✅ Uploaded {len(jobs)} jobs to Google Sheet.")
 
 def main():
-    jobs = scrape_remoteok_jobs(limit=10) + scrape_usajobs()
-    push_to_sheet(jobs)
+    # Define keywords to match (lowercase for consistency)
+    keywords = [
+        "data analyst", "business intelligence", "data scientist",
+        "bi developer", "data engineer", "ai engineer",
+        "machine learning", "nlp engineer", "applied scientist"
+    ]
+
+    def is_match(title):
+        title = title.lower()
+        return any(k in title for k in keywords)
+
+    # Pull job data from both sites
+    all_jobs = scrape_remoteok_jobs(limit=25) + scrape_usajobs(limit=25)
+
+    # Filter job titles
+    matched_jobs = [job for job in all_jobs if is_match(job["Job Title"])]
+
+    print(f"✅ {len(matched_jobs)} jobs matched your keywords.")
+    push_to_sheet(matched_jobs)
+
 
 if __name__ == "__main__":
     main()
+
