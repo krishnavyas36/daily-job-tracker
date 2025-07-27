@@ -29,5 +29,5 @@ jobs:
           USAJOBS_USER_AGENT: ${{ secrets.USAJOBS_USER_AGENT }}
           USAJOBS_API_KEY: ${{ secrets.USAJOBS_API_KEY }}
         run: |
-          echo "$GOOGLE_SHEET_CREDS" > service_account.json
           python main.py
+
