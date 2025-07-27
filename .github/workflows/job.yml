@@ -2,7 +2,7 @@ name: Daily Job Scraper
 
 on:
   schedule:
-    - cron: "0 13 * * *"  # runs every day at 5 AM PST
+    - cron: "0 1 * * *"  # runs every day at 5 PM PST
   workflow_dispatch:
 
 jobs:
