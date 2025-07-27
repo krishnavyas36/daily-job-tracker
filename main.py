@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 import os, json
 from datetime import datetime
 
-# === Scrape RemoteOK ===
 def scrape_remoteok_jobs(limit=50):
     url = "https://remoteok.com/remote-data-jobs"
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -37,7 +36,6 @@ def scrape_remoteok_jobs(limit=50):
             break
     return jobs
 
-# === Scrape USAJobs for multiple keywords ===
 def scrape_usajobs(keywords, location="California", limit=10):
     headers = {
         "Host": "data.usajobs.gov",
@@ -70,7 +68,6 @@ def scrape_usajobs(keywords, location="California", limit=10):
             })
     return jobs
 
-# === Push to Google Sheet ===
 def push_to_sheet(jobs):
     creds_dict = json.loads(os.environ["GOOGLE_SHEET_CREDS"])
     scopes = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
@@ -86,7 +83,6 @@ def push_to_sheet(jobs):
         sheet.append_row(list(job.values()))
     print(f"✅ Uploaded {len(jobs)} jobs to Google Sheet.")
 
-# === Main Script ===
 def main():
     keywords = [
         "data analyst", "business intelligence", "data scientist",
@@ -98,29 +94,4 @@ def main():
         title = title.lower()
         return any(k in title for k in keywords)
 
-    remoteok_jobs = scrape_remoteok_jobs(limit=50)
-    usajobs_jobs = scrape_usajobs(keywords, location="California", limit=10)
-
-    all_jobs = remoteok_jobs + usajobs_jobs
-    print(f"🔍 Total jobs scraped: {len(all_jobs)}")
-    for job in all_jobs:
-        print("🔸", job["Job Title"])
-
-    matched_jobs = [job for job in all_jobs if is_match(job["Job Title"])]
-    print(f"✅ {len(matched_jobs)} jobs matched your keywords.")
-
-    push_to_sheet(matched_jobs)
-
-
-    remoteok_jobs = scrape_remoteok_jobs(limit=50)
-    usajobs_jobs = scrape_usajobs(keywords, location="California", limit=10)
-
-    all_jobs = remoteok_jobs + usajobs_jobs
-    matched_jobs = [job for job in all_jobs if is_match(job["Job Title"])]
-
-    print(f"✅ {len(matched_jobs)} jobs matched your keywords.")
-    push_to_sheet(matched_jobs)
-
-if __name__ == "__main__":
-    main()
-
+    remoteok_jobs = scrape_remoteok_jobs(limit=50)_
