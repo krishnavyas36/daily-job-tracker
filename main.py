@@ -102,6 +102,20 @@ def main():
     usajobs_jobs = scrape_usajobs(keywords, location="California", limit=10)
 
     all_jobs = remoteok_jobs + usajobs_jobs
+    print(f"🔍 Total jobs scraped: {len(all_jobs)}")
+    for job in all_jobs:
+        print("🔸", job["Job Title"])
+
+    matched_jobs = [job for job in all_jobs if is_match(job["Job Title"])]
+    print(f"✅ {len(matched_jobs)} jobs matched your keywords.")
+
+    push_to_sheet(matched_jobs)
+
+
+    remoteok_jobs = scrape_remoteok_jobs(limit=50)
+    usajobs_jobs = scrape_usajobs(keywords, location="California", limit=10)
+
+    all_jobs = remoteok_jobs + usajobs_jobs
     matched_jobs = [job for job in all_jobs if is_match(job["Job Title"])]
 
     print(f"✅ {len(matched_jobs)} jobs matched your keywords.")
