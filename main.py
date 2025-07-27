@@ -94,4 +94,4 @@ def main():
         title = title.lower()
         return any(k in title for k in keywords)
 
-    remoteok_jobs = scrape_remoteok_jobs(limit=50)_
+    remoteok_jobs = scrape_remoteok_jobs(limit=50)
